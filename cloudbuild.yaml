@@ -21,6 +21,8 @@ steps:
       - --region=europe-west1
       - --platform=managed
       - --allow-unauthenticated
+      - --service-account=key-gcs-bq@satisfaction-clients-478614.iam.gserviceaccount.com
       - --port=8000
+
 options:
   logging: CLOUD_LOGGING_ONLY
