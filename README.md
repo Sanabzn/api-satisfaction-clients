@@ -6,9 +6,7 @@ Dans Cloud Run, vérifier que le api-satisfaction est bien actif et récupérer 
 
 Tu peux envoyer une requête comme celle-ci :
 
-curl -X POST "https://api-satisfaction-913270433936.europe-west1.run.app/predict" \
--H "Content-Type: application/json" \
--d '{"text":"service excellent"}'
+curl -X POST "https://api-satisfaction-913270433936.europe-west1.run.app/predict" -H "Content-Type: application/json" -d '{"text":"service excellent"}'
 
 Tu devrais obtenir une réponse du type :
 json
@@ -20,9 +18,7 @@ json
 
 Tu peux également tester avec un avis négatif :
 
-curl -X POST "https://api-satisfaction-913270433936.europe-west1.run.app/predict" \
--H "Content-Type: application/json" \
--d '{"text":"service très mauvais"}'
+curl -X POST "https://api-satisfaction-913270433936.europe-west1.run.app/predict" -H "Content-Type: application/json" -d '{"text":"service mauvais"}'
 
 3. Vérifier les données dans BigQuery
 
