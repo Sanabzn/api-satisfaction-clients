@@ -3,14 +3,15 @@ from pydantic import BaseModel
 from google.cloud import bigquery
 from datetime import datetime
 import uuid
-import mlflow.pyfunc
+import mlflow.sklearn
+import numpy as np
 
 app = FastAPI(title="API Satisfaction Clients")
 
 bq_client = bigquery.Client()
 
 MODEL_PATH = "model"
-model = mlflow.pyfunc.load_model(MODEL_PATH)
+model = mlflow.sklearn.load_model(MODEL_PATH)
 
 
 class Avis(BaseModel):
@@ -36,6 +37,22 @@ def save_prediction(text: str, sentiment: str, score: float):
         print("Erreur insertion BigQuery :", errors)
 
 
+def sigmoid(x: float) -> float:
+    return 1 / (1 + np.exp(-x))
+
+
+def get_model_score(text: str) -> float:
+    decision = model.decision_function([text])
+
+    if isinstance(decision, np.ndarray):
+        decision_value = float(np.max(np.abs(decision)))
+    else:
+        decision_value = float(abs(decision))
+
+    score = sigmoid(decision_value)
+    return round(float(score), 4)
+
+
 @app.get("/")
 def root():
     return {"message": "API Satisfaction Clients OK - modèle SVM intégré"}
@@ -46,12 +63,7 @@ def predict_sentiment(avis: Avis):
     prediction = model.predict([avis.text])[0]
     sentiment = str(prediction)
 
-    if sentiment.lower() == "positive":
-        score = 0.85
-    elif sentiment.lower() == "negative":
-        score = 0.15
-    else:
-        score = 0.50
+    score = get_model_score(avis.text)
 
     save_prediction(avis.text, sentiment, score)
 
