@@ -5,3 +5,4 @@ mlflow
 scikit-learn==1.8.0
 pandas==2.2.3
 cloudpickle==2.2.1
+pytest

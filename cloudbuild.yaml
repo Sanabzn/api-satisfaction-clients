@@ -14,15 +14,23 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
-      - run
-      - deploy
-      - api-satisfaction
-      - --image=europe-west1-docker.pkg.dev/$PROJECT_ID/api-repo/api-satisfaction
-      - --region=europe-west1
-      - --platform=managed
-      - --allow-unauthenticated
-      - --service-account=key-gcs-bq@satisfaction-clients-478614.iam.gserviceaccount.com
-      - --port=8000
+      - 'run'
+      - 'deploy'
+      - 'api-satisfaction'
+      - '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/api-repo/api-satisfaction'
+      - '--region=europe-west1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--service-account=key-gcs-bq@satisfaction-clients-478614.iam.gserviceaccount.com'
+      - '--port=8000'
+
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install pytest requests
+        pytest tests/
 
 options:
   logging: CLOUD_LOGGING_ONLY
